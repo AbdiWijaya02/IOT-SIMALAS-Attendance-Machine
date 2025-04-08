@@ -1,3 +1,38 @@
+<?php
+session_start();
+
+
+include("classes/connect.php");
+include("classes/login.php");
+
+$NIM = "";
+$Password = "";
+$showErrorModal = false;
+$errorMessage = "";
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $login = new Login();
+    $result = $login->evaluate($_POST);
+
+    $NIM = $_POST['NIM'];
+    $Password = $_POST['Password']; 
+
+    if ($result != "") {
+        $showErrorModal = true;
+        // echo "<div style='text-align:center;font-size:12px;color:white;background-color:grey;'>";
+        // echo "<br>The following errors occurred:<br><br>";
+        // echo $result;
+        $errorMessage = $result;
+        // echo "</div>";
+    } else {
+        header("Location: dashboard.php");
+        die;
+    }
+
+ 
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -57,12 +92,11 @@
                 <ul>
                     <li><a href="index.php#hero">Home</a></li>
                     <li><a href="index.php#about">About</a></li>
-                    <li><a href="index.php#features">Features</a></li>
+                    <li><a href="index.php#features">Cara Penggunaan</a></li>
                     <li><a href="index.php#contact">Contact</a></li>
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
-            <a class="btn-getstarted" href="login.php">Login</a>
         </div>
     </header>
 
@@ -84,24 +118,63 @@
                         <div class="text-center">
                             <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                         </div>
-                        <form class="user">
-                            <div class="form-group"> <input type="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address..." /> </div>
-                            <div class="form-group"> <input type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password" /> </div>
-                            <div class="form-group">
-                                <div class="custom-control custom-checkbox small"> <input type="checkbox" class="custom-control-input" id="customCheck" /> <label class="custom-control-label" for="customCheck">Remember Me</label> </div>
-                            </div> <a href="index.html" class="btn btn-primary btn-user btn-block">
-                                            Login
-                                </a>
-                        </form>
-                        <hr />
-                        <div class="text-center"> <a class="small" href="forgot-password.html">Forgot Password?</a> </div>
-                        <div class="text-center"> <a class="small" href="register.html">Create an Account!</a> </div>
+                        <form class="user" method="POST" action=""data-aos="fade-up" data-aos-delay="200">
+                                        <div class="form-group">
+                                            <input type="text" name="NIM" class="form-control form-control-user" placeholder="Enter NIM">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" name="Password" class="form-control form-control-user" placeholder="Password">
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck">
+                                                <label class="custom-control-label" for="customCheck">Remember Me</label>
+                                            </div>
+                                        </div>
+                                    <button type="submit" class="btn btn-primary btn-user btn-block">
+                                        Login
+                                    </button>
+                                    <hr>
+                                </form>
+
+                                    <hr>
+                                    <div class="text-center">
+                                        <a class="small" href="register.php">Create an Account!</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="passwordMismatchModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Login Gagal</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><?php echo $errorMessage; ?></p> <!-- Tampilkan pesan error -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
+
+    
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -112,6 +185,16 @@
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
 
+    <script>
+    $(document).ready(function() {
+        <?php if ($showErrorModal): ?>
+            $('#passwordMismatchModal').modal('show');
+        <?php endif; ?>
+    });
+    </script>
+
 </body>
 
 </html>
+
+

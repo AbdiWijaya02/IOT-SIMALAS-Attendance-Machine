@@ -1,3 +1,46 @@
+<?php
+session_start();
+
+$userid = $_SESSION["aiot_userid"]; 
+$username = $_SESSION["aiot_nama"];
+$userNIM = $_SESSION["aiot_NIM"];
+$userPBL = $_SESSION["aiot_PBL"];
+$useremail = $_SESSION["aiot_email"];
+
+include("classes/connect.php");
+include("classes/login.php");
+
+
+if(isset($_SESSION["aiot_userid"])&& is_numeric($_SESSION["aiot_userid"]))
+{
+    $id = $_SESSION["aiot_userid"];
+    $login = new Login();
+
+    $login ->check_login($id);
+
+    $result = $login->check_login($id);
+    
+  
+    if($result){
+       
+    }
+    else{
+
+        header("Location: Login.php");
+        die;
+    }
+
+}
+
+else{
+    header("Location: Login.php");
+    die;
+}
+
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 

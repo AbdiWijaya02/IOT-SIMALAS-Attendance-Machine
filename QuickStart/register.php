@@ -1,5 +1,40 @@
 <?php
+        
+include('classes/connect.php');
+include('classes/signup.php');
+
+$Nama = "";
+$NIM = "";
+$PBL = "";
+$gender = "";
+$email = "";
+
+if($_SERVER['REQUEST_METHOD']== 'POST'){
+
+$signup = new Signup();
+$result = $signup->evaluate($_POST);
+
+if ($result !="") {
+
+    echo "<div style= 'text-align:center;font-size:12px;color:white;background-color:grey;'>";
+    echo"<br>The following errors occured:<br><br>";
+    echo $result;
+    echo "</div>";
+
+}else{
+    header("Location: login.php");
+    die;
+}
+
+$Nama = $_POST['Nama'];
+$NIM = $_POST['NIM'];
+$PBL = $_POST['PBL'];
+$gender = $_POST['gender'];
+$email = $_POST['email'];
+
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,9 +72,10 @@
 
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
+  
 </head>
 
-<body style="background: url('/QuickStart/assets/img/labs.png') no-repeat center center; background-size: cover;">
+<body style="background: url('/QuickStart/assets/img/jes.jpg') no-repeat center center; background-size: cover;">
 
     <!-- Header -->
     <header id="header" class="header d-flex align-items-center fixed-top">
@@ -53,7 +89,7 @@
                 <ul>
                     <li><a href="index.php#hero">Home</a></li>
                     <li><a href="index.php#about">About</a></li>
-                    <li><a href="index.php#features">Features</a></li>
+                    <li><a href="index.php#features">Cara Penggunaan</a></li>
                     <li><a href="index.php#contact">Contact</a></li>
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
@@ -69,7 +105,7 @@
     </script>
 
     <!-- Container utama -->
-    <div class="container" style="margin-top: 200px;">
+    <div class="container" style="margin-top: 130px;">
         <div class="card o-hidden border-0 shadow-lg my-5" data-aos="fade-up">
             <div class="card-body p-0">
                 <div class="row">
@@ -84,38 +120,46 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4" data-aos="fade-up">Create an Account!</h1>
                             </div>
-                            <form class="user" data-aos="fade-up" data-aos-delay="200">
+                            <form class="user" method="POST" action="" id="registrationForm" data-aos="fade-up" data-aos-delay="200">
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="exampleFirstName"
-                                            placeholder="First Name">
+                                        <input type="text" class="form-control form-control-user" id="exampleFirstName"name="Nama"
+                                            placeholder="Nama">
                                     </div>
                                     <div class="col-sm-6 mb-3">
-                                        <input type="text" class="form-control form-control-user" id="exampleLastName"
-                                            placeholder="Last Name">
+                                        <input type="text" class="form-control form-control-user" id="exampleLastName"name="PBL"
+                                            placeholder="PBL">
                                     </div>
                                     <div class="col-sm-12">
-                                        <input type="text" class="form-control form-control-user" id="exampleNIM"
+                                        <input type="text" class="form-control form-control-user" id="exampleNIM"name="NIM"
                                             placeholder="NIM">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail"
+                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail"name="email"
                                         placeholder="Email Address">
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="password" class="form-control form-control-user"
+                                        <input type="password" name="Password" class="form-control form-control-user"
                                             id="exampleInputPassword" placeholder="Password">
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="password" class="form-control form-control-user"
-                                            id="exampleRepeatPassword" placeholder="Repeat Password">
+                                        name="repeat_password" id="exampleRepeatPassword" placeholder="Repeat Password" >
                                     </div>
                                 </div>
-                                <a href="login.php" class="btn btn-primary btn-user btn-block" data-aos="zoom-in" data-aos-delay="300">
+                                <div class="form-group">
+                                    <label for="genderSelect"></label>
+                                    <select class="form-control" id="genderSelect" name="gender">
+                                        <option value="Laki-Laki">Laki-Laki</option>
+                                        <option value="Perempuan">Perempuan</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-user" style="width: 450px; padding: 10px 30px;" data-aos="zoom-in" data-aos-delay="300">
                                     Register Account
-                                </a>
+                                </button>
+
                                 <hr>
                             </form>
                             <hr>
@@ -123,9 +167,29 @@
                                 <a class="small" href="login.php">Already have an account? Login!</a>
                             </div>
                             
-                          
                         </div>
                     </div>  
+                </div>
+            </div>
+        </div>
+    </div>
+   
+
+        <!-- Modal -->
+        <div class="modal fade" id="passwordMismatchModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Kata Sandi Tidak Cocok</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Kata sandi yang Anda masukkan tidak cocok. Silakan coba lagi.
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
@@ -140,6 +204,21 @@
 
     <!-- Custom scripts for all pages -->
     <script src="js/sb-admin-2.min.js"></script>
+
+    
+    <script>
+        // Menangani pengiriman formulir
+        document.getElementById("registrationForm").addEventListener("submit", function(event) {
+            const password = document.getElementById("exampleInputPassword").value;
+            const confirmPassword = document.getElementById("exampleRepeatPassword").value;
+
+
+            if (password !== confirmPassword) {
+                event.preventDefault(); 
+                $('#passwordMismatchModal').modal('show'); 
+            }
+        });
+    </script>
 
 </body>
 
