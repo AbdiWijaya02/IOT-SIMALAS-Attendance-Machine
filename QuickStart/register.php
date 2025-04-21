@@ -1,5 +1,5 @@
 <?php
-        
+session_start();
 include('classes/connect.php');
 include('classes/signup.php');
 
@@ -8,30 +8,31 @@ $NIM = "";
 $PBL = "";
 $gender = "";
 $email = "";
+$errorMessage = "";
+$showErrorModal = false;
+$showSuccessModal = false;
 
-if($_SERVER['REQUEST_METHOD']== 'POST'){
-
-$signup = new Signup();
-$result = $signup->evaluate($_POST);
-
-if ($result !="") {
-
-    echo "<div style= 'text-align:center;font-size:12px;color:white;background-color:grey;'>";
-    echo"<br>The following errors occured:<br><br>";
-    echo $result;
-    echo "</div>";
-
-}else{
-    header("Location: login.php");
-    die;
+if (isset($_GET['error']) && $_GET['error'] == 'true') {
+    $showErrorModal = true;
 }
 
-$Nama = $_POST['Nama'];
-$NIM = $_POST['NIM'];
-$PBL = $_POST['PBL'];
-$gender = $_POST['gender'];
-$email = $_POST['email'];
+if($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $signup = new Signup();
+    $result = $signup->evaluate($_POST);
 
+    if ($result != "") {
+        $showErrorModal = true;
+        $errorMessage = $result;
+    } else {
+        $showSuccessModal = true;
+        // Tidak langsung redirect di sini, biarkan JavaScript menangani
+    }
+
+    $Nama = $_POST['Nama'];
+    $NIM = $_POST['NIM'];
+    $PBL = $_POST['PBL'];
+    $gender = $_POST['gender'];
+    $email = $_POST['email'];
 }
 ?>
 
@@ -54,34 +55,29 @@ $email = $_POST['email'];
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
-     <!-- Favicons -->
-  <link href="assets/img/brail.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+    <!-- Favicons -->
+    <link href="assets/img/brail.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
-  <!-- Fonts
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"> -->
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css'>
 
-  <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <!-- Vendor CSS Files -->
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
-  <!-- Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet">
-  
+    <!-- Main CSS File -->
+    <link href="assets/css/main.css" rel="stylesheet">
 </head>
 
-<body style="background: url('/QuickStart/assets/img/jes.jpg') no-repeat center center; background-size: cover;">
+<body style="background: url('assets/img/jes.jpg') no-repeat center center; background-size: cover;">
 
     <!-- Header -->
     <header id="header" class="header d-flex align-items-center fixed-top">
         <div class="container-fluid container-xl position-relative d-flex align-items-center">
             <a href="index.php" class="logo d-flex align-items-center me-auto">
-                <!-- <img src="assets/img/R.png" alt=""> -->
                 <img src="assets/img/log.png" alt="">
                 <h1 class="sitename">Simalas</h1>
             </a>
@@ -111,7 +107,7 @@ $email = $_POST['email'];
                 <div class="row">
                     <!-- Kolom untuk gambar -->
                     <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center">
-                        <img src="/QuickStart/assets/img/sec.png" style="width: 100%; max-width: 500px;">
+                        <img src="assets/img/sec.png" style="width: 100%; max-width: 500px;">
                     </div>
 
                     <!-- Kolom untuk form -->
@@ -123,21 +119,26 @@ $email = $_POST['email'];
                             <form class="user" method="POST" action="" id="registrationForm" data-aos="fade-up" data-aos-delay="200">
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="exampleFirstName"name="Nama"
-                                            placeholder="Nama">
+                                        <input type="text" class="form-control form-control-user" id="exampleFirstName" name="Nama"
+                                            placeholder="Nama" value="<?php echo htmlspecialchars($Nama); ?>">
                                     </div>
                                     <div class="col-sm-6 mb-3">
-                                        <input type="text" class="form-control form-control-user" id="exampleLastName"name="PBL"
-                                            placeholder="PBL">
+                                        <input type="text" class="form-control form-control-user" id="exampleLastName" name="PBL"
+                                            placeholder="PBL" oninput="toUpperCase(this)" value="<?php echo htmlspecialchars($PBL); ?>">
                                     </div>
+                                    <script>
+                                        function toUpperCase(input) {
+                                            input.value = input.value.toUpperCase();
+                                        }
+                                    </script>
                                     <div class="col-sm-12">
-                                        <input type="text" class="form-control form-control-user" id="exampleNIM"name="NIM"
-                                            placeholder="NIM">
+                                        <input type="text" class="form-control form-control-user" id="exampleNIM" name="NIM"
+                                            placeholder="NIM" value="<?php echo htmlspecialchars($NIM); ?>">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail"name="email"
-                                        placeholder="Email Address">
+                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail" name="email"
+                                        placeholder="Email Address" value="<?php echo htmlspecialchars($email); ?>">
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
@@ -146,27 +147,25 @@ $email = $_POST['email'];
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="password" class="form-control form-control-user"
-                                        name="repeat_password" id="exampleRepeatPassword" placeholder="Repeat Password" >
+                                        name="repeat_password" id="exampleRepeatPassword" placeholder="Repeat Password">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="genderSelect"></label>
                                     <select class="form-control" id="genderSelect" name="gender">
-                                        <option value="Laki-Laki">Laki-Laki</option>
-                                        <option value="Perempuan">Perempuan</option>
+                                        <option value="Laki-Laki" <?php echo ($gender == 'Laki-Laki') ? 'selected' : ''; ?>>Laki-Laki</option>
+                                        <option value="Perempuan" <?php echo ($gender == 'Perempuan') ? 'selected' : ''; ?>>Perempuan</option>
                                     </select>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-user" style="width: 450px; padding: 10px 30px;" data-aos="zoom-in" data-aos-delay="300">
                                     Register Account
                                 </button>
-
                                 <hr>
                             </form>
                             <hr>
                             <div class="text-center" data-aos="fade-up" data-aos-delay="600">
                                 <a class="small" href="login.php">Already have an account? Login!</a>
                             </div>
-                            
                         </div>
                     </div>  
                 </div>
@@ -174,25 +173,57 @@ $email = $_POST['email'];
         </div>
     </div>
    
+    <!-- Modal untuk Password Tidak Cocok -->
+    <div class="modal fade" id="missmatch" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false"> 
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document"> 
+            <div class="modal-content"> 
+                <div class="modal-body text-center p-lg-4"> 
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                        <circle class="path circle" fill="none" stroke="#db3646" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1" /> 
+                        <line class="path line" fill="none" stroke="#db3646" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3" />
+                        <line class="path line" fill="none" stroke="#db3646" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="95.8" y1="38" X2="34.4" y2="92.2" /> 
+                    </svg> 
+                    <h4 class="text-danger mt-3">Invalid Register!</h4> 
+                    <p class="mt-3">Password Tidak Cocok!!!</p>
+                    <button type="button" class="btn btn-sm mt-3 btn-danger" data-bs-dismiss="modal">Ok</button> 
+                </div> 
+            </div> 
+        </div> 
+    </div>
 
-        <!-- Modal -->
-        <div class="modal fade" id="passwordMismatchModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Kata Sandi Tidak Cocok</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Kata sandi yang Anda masukkan tidak cocok. Silakan coba lagi.
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Tutup</button>
-                </div>
-            </div>
-        </div>
+    <!-- Modal untuk Error Lainnya -->
+    <div class="modal fade" id="statusErrorsModal" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false"> 
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document"> 
+            <div class="modal-content"> 
+                <div class="modal-body text-center p-lg-4"> 
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                        <circle class="path circle" fill="none" stroke="#db3646" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1" /> 
+                        <line class="path line" fill="none" stroke="#db3646" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="34.4" y1="37.9" x2="95.8" y2="92.3" />
+                        <line class="path line" fill="none" stroke="#db3646" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" x1="95.8" y1="38" X2="34.4" y2="92.2" /> 
+                    </svg> 
+                    <h4 class="text-danger mt-3">Invalid Register!</h4> 
+                    <p class="mt-3"><?php echo htmlspecialchars($errorMessage); ?></p>
+                    <button type="button" class="btn btn-sm mt-3 btn-danger" data-bs-dismiss="modal">Ok</button> 
+                </div> 
+            </div> 
+        </div> 
+    </div>
+
+    <!-- Modal untuk Sukses Register -->
+    <div class="modal fade" id="statusSuccessModal" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false"> 
+        <div class="modal-dialog modal-dialog-centered modal-sm" role="document"> 
+            <div class="modal-content"> 
+                <div class="modal-body text-center p-lg-4"> 
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                        <circle class="path circle" fill="none" stroke="#198754" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1" />
+                        <polyline class="path check" fill="none" stroke="#198754" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 " /> 
+                    </svg> 
+                    <h4 class="text-success mt-3">Oh Yeah!</h4> 
+                    <p class="mt-3">You have successfully registered!</p>
+                    <button type="button" class="btn btn-sm mt-3 btn-success" data-bs-dismiss="modal" id="successModalButton">Ok</button> 
+                </div> 
+            </div> 
+        </div> 
     </div>
 
     <!-- Bootstrap core JavaScript -->
@@ -204,22 +235,39 @@ $email = $_POST['email'];
 
     <!-- Custom scripts for all pages -->
     <script src="js/sb-admin-2.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script> 
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.0/js/bootstrap.min.js'></script>
 
-    
     <script>
         // Menangani pengiriman formulir
         document.getElementById("registrationForm").addEventListener("submit", function(event) {
             const password = document.getElementById("exampleInputPassword").value;
             const confirmPassword = document.getElementById("exampleRepeatPassword").value;
 
-
             if (password !== confirmPassword) {
                 event.preventDefault(); 
-                $('#passwordMismatchModal').modal('show'); 
+                $('#missmatch').modal('show'); 
             }
+        });
+
+        $(document).ready(function() {
+            <?php if ($showErrorModal): ?>
+                $('#statusErrorsModal').modal('show');
+            <?php elseif ($showSuccessModal): ?>
+                $('#statusSuccessModal').modal('show');
+                
+                // Redirect ketika modal sukses ditutup
+                $('#statusSuccessModal').on('hidden.bs.modal', function () {
+                    window.location.href = "login.php";
+                });
+                
+                // Atau redirect otomatis setelah 3 detik
+                setTimeout(function() {
+                    window.location.href = "login.php";
+                }, 3000);
+            <?php endif; ?>
         });
     </script>
 
 </body>
-
 </html>

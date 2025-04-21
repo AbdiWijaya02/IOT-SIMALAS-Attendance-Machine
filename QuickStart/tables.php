@@ -1,46 +1,3 @@
-<?php
-session_start();
-
-$userid = $_SESSION["aiot_userid"]; 
-$username = $_SESSION["aiot_nama"];
-$userNIM = $_SESSION["aiot_NIM"];
-$userPBL = $_SESSION["aiot_PBL"];
-$useremail = $_SESSION["aiot_email"];
-
-include("classes/connect.php");
-include("classes/login.php");
-
-
-if(isset($_SESSION["aiot_userid"])&& is_numeric($_SESSION["aiot_userid"]))
-{
-    $id = $_SESSION["aiot_userid"];
-    $login = new Login();
-
-    $login ->check_login($id);
-
-    $result = $login->check_login($id);
-    
-  
-    if($result){
-       
-    }
-    else{
-
-        header("Location: Login.php");
-        die;
-    }
-
-}
-
-else{
-    header("Location: Login.php");
-    die;
-}
-
-?>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -52,18 +9,20 @@ else{
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Simalas - Dashboard</title>
+    <title>Simalas - Admin</title>
     <link href="assets/img/brail2.png" rel="icon">
-    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
-    <!-- Custom fonts for this template-->
+    <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
-    <!-- Custom styles for this template-->
+    <!-- Custom styles for this template -->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this page -->
+    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 </head>
 
@@ -78,40 +37,36 @@ else{
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.php">
                 <div class="sidebar-brand-icon rotate-n-15">
-                <img src="assets/img/brail2.png" alt="custom icon" width="40" height="40">
-                    
+                    <img src="assets/img/brail2.png" alt="custom icon" width="40" height="40">
                 </div>
-                <div class="sidebar-brand-text mx-3">Simalas <sup>2025</sup>
-                
-            </div>
+                <div class="sidebar-brand-text mx-3">Simalas <sup>2025</sup></div>
             </a>
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="dashboard.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
-            <!-- Nav Item - Pages Collapse Menu -->
+
             <!-- Divider -->
             <hr class="sidebar-divider">
 
-            <!-- Nav Item - Pages Collapse Menu -->
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
                 <a class="nav-link" href="charts.php">
                     <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Kehadiran</span></a>
+                    <span>Charts</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="tables.php">
-                    <i class="fa fa-users"></i>
+                    <i class="fas fa-users"></i>
                     <span>Admin</span></a>
             </li>
 
@@ -121,13 +76,6 @@ else{
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-
-            <!-- Sidebar Message -->
-            <div class="sidebar-card d-none d-lg-flex">
-                <img class="sidebar-card-illustration mb-2" src="img/undraw_rocket.svg" alt="...">
-                <p class="text-center mb-2"><strong>SB Admin Pro</strong> is packed with premium features, components, and more!</p>
-                <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to Pro!</a>
             </div>
 
         </ul>
@@ -143,9 +91,11 @@ else{
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
                     <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
+                    <form class="form-inline">
+                        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                    </form>
 
  
 
@@ -299,7 +249,7 @@ else{
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo htmlspecialchars($username); ?></span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
                                 <img class="img-profile rounded-circle"
                                     src="img/undraw_profile.svg">
                             </a>
@@ -335,100 +285,90 @@ else{
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-                    </div>
+                    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
+                    <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
+                        For more information about DataTables, please visit the <a target="_blank"
+                            href="https://datatables.net">official DataTables documentation</a>.</p>
 
- 
-
-                    <!-- Content Row -->
-
-                <div class="row">
-                    <div class="col-xl-12 col-lg-5">
-
-                        <!-- Illustrations -->
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Profile</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="text-center">
-                                    <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                                        src="img/undraw_posting_photo.svg" alt="...">
-                                </div>
-
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item"><strong>NAMA:</strong> <?php echo htmlspecialchars($username); ?></li>
-                                    <li class="list-group-item"><strong>NIM:</strong> <?php echo htmlspecialchars($userNIM); ?></li>
-                                    <li class="list-group-item"><strong>PBL:</strong> <?php echo htmlspecialchars($userPBL); ?></li>
-                                    <li class="list-group-item"><strong>Email:</strong> <?php echo htmlspecialchars($useremail); ?></li>
-                                </ul>
-                       
-                            </div>
+                
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-3">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
                         </div>
-
-                    </div>
-
-                                    <!-- Revenue Sources -->
-                    <div class="col-lg-6 mb-4">
-                        <div class="card shadow mb-4">
-                            <!-- Card Header - Dropdown -->
-                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Kehadiran</h6>
-                                <!-- Dropdown -->
-                            </div>
-                            <div class="card-body">
-                                <div class="chart-pie pt-4 pb-2">
-                                    <canvas id="myPieChart"></canvas>
-                                </div>
-                                <div class="mt-4 text-center small">
-                                    <span class="mr-2"><i class="fas fa-circle text-success"></i> Present</span>
-                                    <span class="mr-2"><i class="fas fa-circle text-warning"></i> In Late</span>
-                                    <span class="mr-2"><i class="fas fa-circle text-danger"></i> Absent</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Projects - moved to the right -->
-                    <div class="col-lg-6 mb-4">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Presentasi Kehadiran</h6>
-                            </div>
-                            <div class="card-body">
-                                <h4 class="small font-weight-bold">Absent <span class="float-right">20%</span></h4>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
-                                        aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <h4 class="small font-weight-bold">In Late <span class="float-right">40%</span></h4>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                                        aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <h4 class="small font-weight-bold">Present <span class="float-right">60%</span></h4>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: 60%"
-                                        aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Team</th>
+                                            <th>Manager Project</th>
+                                            <th>Nama Barang</th>
+                                            <th>Jumlah</th>
+                                            <th>Status</th>
+                                            <th>Tanggal</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Team</th>
+                                            <th>Manager Project</th>
+                                            <th>Nama Barang</th>
+                                            <th>Jumlah</th>
+                                            <th>Status</th>
+                                            <th>Tanggal</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                    <tr>
+                                            <td>SIMALAS</td>
+                                            <td>Abdi Wijaya</td>
+                                            <td>Esp32</td>
+                                            <td>51</td>
+                                            <td>Diambil</td>
+                                            <td>2008/11/13</td>
+                                        </tr>
+                                        <tr>
+                                            <td>SIMALAS</td>
+                                            <td>Abdi Wijaya</td>
+                                            <td>Arduino Atmega</td>
+                                            <td>29</td>
+                                            <td>Diloker</td>
+                                            <td>2011/06/27</td>
+                                        </tr>
+                                           <tr>
+                                            <td>SIMALAS</td>
+                                            <td>Abdi Wijaya</td>
+                                            <td>Arduino Atmega</td>
+                                            <td>29</td>
+                                            <td>Diloker</td>
+                                            <td>2011/06/27</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
-                </div>
-                                    
-
-
-
-                        <!-- Pie Chart -->
-                       
-                        
+                    <!-- Donut Chart -->
+                        <div class="col-xl-13 col-lg-13">
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Donut Chart</h6>
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <div class="chart-pie pt-4">
+                                        
+                                    </div>
+                               
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                </div>
-                </div>
+             
+
                 <!-- /.container-fluid -->
 
             </div>
@@ -438,9 +378,7 @@ else{
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Simalas 2025
-
-                        </span>
+                        <span>Copyright &copy; Your Website 2020</span>
                     </div>
                 </div>
             </footer>
@@ -488,11 +426,11 @@ else{
     <script src="js/sb-admin-2.min.js"></script>
 
     <!-- Page level plugins -->
-    <script src="vendor/chart.js/Chart.min.js"></script>
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script>
+    <script src="js/demo/datatables-demo.js"></script>
 
 </body>
 

@@ -7,6 +7,7 @@ class Database
     private $password = "";
     private $db = "aiot"; 
     private $connection;
+    private $last_error;
 
     function __construct()
     {
@@ -47,6 +48,10 @@ class Database
         } else {
             return true;
         }
+    }
+    
+    public function get_error() {
+        return $this->last_error;
     }
 
     // Metode untuk menyiapkan statement

@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
 </head>
-<body style="background: url('/QuickStart/assets/img/jes.jpg') no-repeat center center; background-size: cover;">
+<body style="background: url('assets/img/jes.jpg') no-repeat center center; background-size: cover;">
 
 
 <body class="bg-gradient-primary">
@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="card-body p-0">
             <div class="row">
                 <!-- Kolom untuk gambar -->
-                <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center"> <img src="/QuickStart/assets/img/por.png" style="width: 100%; max-width: 500px;" /> </div> <!-- Kolom untuk form -->
+                <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center"> <img src="assets/img/por.png" style="width: 100%; max-width: 500px;" /> </div> <!-- Kolom untuk form -->
                 <div class="col-lg-6">
                     <div class="p-5">
                         <div class="text-center">
