@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-$userid = $_SESSION["aiot_userid"]; 
+$userid = $_SESSION["aiot_userid"];
 $username = $_SESSION["aiot_nama"];
 $userNIM = $_SESSION["aiot_NIM"];
 $userPBL = $_SESSION["aiot_PBL"];
@@ -11,28 +11,22 @@ include("classes/connect.php");
 include("classes/login.php");
 
 
-if(isset($_SESSION["aiot_userid"])&& is_numeric($_SESSION["aiot_userid"]))
-{
+if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
     $id = $_SESSION["aiot_userid"];
     $login = new Login();
 
-    $login ->check_login($id);
+    $login->check_login($id);
 
     $result = $login->check_login($id);
-    
-  
-    if($result){
-       
-    }
-    else{
+
+
+    if ($result) {
+    } else {
 
         header("Location: Login.php");
         die;
     }
-
-}
-
-else{
+} else {
     header("Location: Login.php");
     die;
 }
@@ -45,7 +39,6 @@ else{
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -74,16 +67,13 @@ else{
 
         <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.php">
                 <div class="sidebar-brand-icon rotate-n-15">
-                <img src="assets/img/brail2.png" alt="custom icon" width="40" height="40">
-                    
+                    <img src="assets/img/brail2.png" alt="custom icon" width="40" height="40">
                 </div>
                 <div class="sidebar-brand-text mx-3">Simalas <sup>2025</sup>
-                
-            </div>
+                </div>
             </a>
 
             <!-- Divider -->
@@ -95,24 +85,13 @@ else{
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
-            <!-- Nav Item - Pages Collapse Menu -->
-            <!-- Divider -->
-            <hr class="sidebar-divider">
 
-            <!-- Nav Item - Pages Collapse Menu -->
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="charts.php">
+                <a class="nav-link" href="Kehadiran.php">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Kehadiran</span></a>
-            </li>
-
-            <!-- Nav Item - Tables -->
-            <li class="nav-item">
-                <a class="nav-link" href="tables.php">
-                    <i class="fa fa-users"></i>
-                    <span>Admin</span></a>
             </li>
 
             <!-- Divider -->
@@ -124,11 +103,6 @@ else{
             </div>
 
             <!-- Sidebar Message -->
-            <div class="sidebar-card d-none d-lg-flex">
-                <img class="sidebar-card-illustration mb-2" src="img/undraw_rocket.svg" alt="...">
-                <p class="text-center mb-2"><strong>SB Admin Pro</strong> is packed with premium features, components, and more!</p>
-                <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to Pro!</a>
-            </div>
 
         </ul>
         <!-- End of Sidebar -->
@@ -142,12 +116,30 @@ else{
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
+                    <!-- KIRI: Time Display -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="#" id="timeDisplay" style="
+                            border: 2px solid #f4f4f4;
+                            border-radius: 12px;
+                            padding: 12px 20px;
+                            font-size: 18px;
+                            color: rgb(15, 15, 15);
+                            background-color: rgb(#f4f4f4);
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.backgroundColor='#e6f0ff'" onmouseout="this.style.backgroundColor='#f0f8ff'">
+                                <i class="fas fa-clock me-2"></i>
+                                <span id="timeText">TIME</span>
+                            </a>
+                        </li>
+                    </ul>
+
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
                     </button>
 
- 
+
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -335,102 +327,88 @@ else{
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
-                    </div>
-
- 
 
                     <!-- Content Row -->
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-5">
 
-                <div class="row">
-                    <div class="col-xl-12 col-lg-5">
-
-                        <!-- Illustrations -->
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Profile</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="text-center">
-                                    <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                                        src="img/undraw_posting_photo.svg" alt="...">
+                            <!-- Illustrations -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Profile</h6>
                                 </div>
+                                <div class="card-body">
+                                    <div class="text-center">
+                                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
+                                            src="img/undraw_posting_photo.svg" alt="...">
+                                    </div>
 
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item"><strong>NAMA:</strong> <?php echo htmlspecialchars($username); ?></li>
-                                    <li class="list-group-item"><strong>NIM:</strong> <?php echo htmlspecialchars($userNIM); ?></li>
-                                    <li class="list-group-item"><strong>PBL:</strong> <?php echo htmlspecialchars($userPBL); ?></li>
-                                    <li class="list-group-item"><strong>Email:</strong> <?php echo htmlspecialchars($useremail); ?></li>
-                                </ul>
-                       
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item"><strong>NAMA:</strong> <?php echo htmlspecialchars($username); ?></li>
+                                        <li class="list-group-item"><strong>NIM:</strong> <?php echo htmlspecialchars($userNIM); ?></li>
+                                        <li class="list-group-item"><strong>PBL:</strong> <?php echo htmlspecialchars($userPBL); ?></li>
+                                        <li class="list-group-item"><strong>User ID:</strong> <?php echo htmlspecialchars($userid); ?></li>
+                                    </ul>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Revenue Sources -->
+                        <div class="col-lg-6 mb-4">
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Kehadiran</h6>
+                                    <!-- Dropdown -->
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-pie pt-4 pb-2">
+                                        <canvas id="myPieChart"></canvas>
+                                    </div>
+                                    <div class="mt-4 text-center small">
+                                        <span class="mr-2"><i class="fas fa-circle text-success"></i> Present</span>
+                                        <span class="mr-2"><i class="fas fa-circle text-warning"></i> In Late</span>
+                                        <span class="mr-2"><i class="fas fa-circle text-danger"></i> Absent</span>
+                                    </div>
+                                    <div class="mt-2 text-center small" id="totalDays">Total: - hari</div>
+                                </div>
                             </div>
                         </div>
 
-                    </div>
 
-                                    <!-- Revenue Sources -->
-                    <div class="col-lg-6 mb-4">
-                        <div class="card shadow mb-4">
-                            <!-- Card Header - Dropdown -->
-                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Kehadiran</h6>
-                                <!-- Dropdown -->
-                            </div>
-                            <div class="card-body">
-                                <div class="chart-pie pt-4 pb-2">
-                                    <canvas id="myPieChart"></canvas>
+                        <!-- Projects - moved to the right -->
+                        <div class="col-lg-6 mb-4">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Presentasi Kehadiran</h6>
                                 </div>
-                                <div class="mt-4 text-center small">
-                                    <span class="mr-2"><i class="fas fa-circle text-success"></i> Present</span>
-                                    <span class="mr-2"><i class="fas fa-circle text-warning"></i> In Late</span>
-                                    <span class="mr-2"><i class="fas fa-circle text-danger"></i> Absent</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                <div class="card-body">
+                                    <h4 class="small font-weight-bold">Absent <span class="float-right" id="absentText">0%</span></h4>
+                                    <div class="progress mb-4">
+                                        <div id="absentBar" class="progress-bar bg-danger" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
 
-                    <!-- Projects - moved to the right -->
-                    <div class="col-lg-6 mb-4">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Presentasi Kehadiran</h6>
-                            </div>
-                            <div class="card-body">
-                                <h4 class="small font-weight-bold">Absent <span class="float-right">20%</span></h4>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
-                                        aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <h4 class="small font-weight-bold">In Late <span class="float-right" id="lateText">0%</span></h4>
+                                    <div class="progress mb-4">
+                                        <div id="lateBar" class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+
+                                    <h4 class="small font-weight-bold">Present <span class="float-right" id="presentText">0%</span></h4>
+                                    <div class="progress mb-4">
+                                        <div id="presentBar" class="progress-bar bg-success" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+
                                 </div>
-                                <h4 class="small font-weight-bold">In Late <span class="float-right">40%</span></h4>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                                        aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <h4 class="small font-weight-bold">Present <span class="float-right">60%</span></h4>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: 60%"
-                                        aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
+
                             </div>
                         </div>
                     </div>
-                </div>
-                                    
 
-
-
-                        <!-- Pie Chart -->
-                       
-                        
-                    </div>
+                    <!-- /.container-fluid -->
 
                 </div>
-                </div>
-                <!-- /.container-fluid -->
-
             </div>
             <!-- End of Main Content -->
 
@@ -471,11 +449,18 @@ else{
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-primary" href="logout.php">Logout</a>
                 </div>
             </div>
         </div>
     </div>
+    <!-- myPieChart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart/Grafik -->
+    <script src="js/user/piechart.js"></script>
+    <script src="js/user/proggresbar.js"></script>
+    <script src="js/demo/time.js"></script>
+
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>

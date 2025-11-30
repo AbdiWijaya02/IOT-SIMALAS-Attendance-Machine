@@ -4,34 +4,32 @@ class Signup
 {
 
     private $error = "";
-    
+
     public function evaluate($data)
     {
         foreach ($data as $key => $value) {
-            if(empty($value)) {
+            if (empty($value)) {
                 $this->error = $this->error . $key . " is empty!<br>";
             }
         }
 
-        if($this->error == "") 
-        {
+        if ($this->error == "") {
             // No error
             return $this->create_user($data);
-        }
-        else
-        {
+        } else {
             return $this->error;
         }
     }
 
     public function create_user($data)
-    {   
+    {
         $Nama = isset($data['Nama']) ? $data['Nama'] : '';
         $NIM = isset($data['NIM']) ? $data['NIM'] : '';
         $PBL = isset($data['PBL']) ? $data['PBL'] : '';
         $Password = isset($data['Password']) ? $data['Password'] : '';
         $email = isset($data['email']) ? $data['email'] : '';
         $gender = isset($data['gender']) ? $data['gender'] : '';
+        $Angkatan = isset($data['Angkatan']) ? $data['Angkatan'] : '';
 
         // Cek apakah NIM sudah terdaftar
         $DB = new Database();
@@ -54,26 +52,24 @@ class Signup
             $url_addres = strtolower($Nama) . "." . strtolower($NIM);
             $userid = $this->create_userid();
 
-            $query = "INSERT INTO user (userid, Nama, NIM, PBL, Password, email, gender, url_addres) 
-                      VALUES ('$userid', '$Nama', '$NIM', '$PBL', '$hashedPassword', '$email', '$gender', '$url_addres')";
+            $query = "INSERT INTO user (userid, Nama, NIM, PBL, Password, email, gender,Angkatan, url_addres) 
+                      VALUES ('$userid', '$Nama', '$NIM', '$PBL', '$hashedPassword', '$email', '$gender','$Angkatan', '$url_addres')";
 
             $DB->save($query);
             header("Location: login.php");
             exit();
             return "Pendaftaran berhasil!";
-            
-
         }
     }
 
     private function create_userid()
     {
-        $length = rand(4,10);
+        $length = rand(1, 3); // Panjang antara 1 sampai 3 digit
         $number = "";
-        for ($i = 0; $i < $length; $i++){
-            $new_rand = rand(0,9);
+        for ($i = 0; $i < $length; $i++) {
+            $new_rand = rand(0, 9); // Angka 0-9
             $number .= $new_rand;
         }
-        return $number;   
+        return $number;
     }
 }

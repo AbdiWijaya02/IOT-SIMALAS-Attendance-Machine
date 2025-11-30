@@ -1,0 +1,110 @@
+body {
+  background-color: #f5f5f5;
+  font-family: "Roboto", sans-serif;
+  padding: 40px 0;
+}
+
+/* Text Styles */
+
+h1 {
+  text-align: center;
+  font-weight: 700;
+  margin: 50px 0;
+  color: #181836;
+}
+
+span {
+  color: #f54260;
+}
+
+h2 {
+  text-align: center;
+  font-weight: 400;
+  color: white;
+  background-color: #f54260;
+  padding: 15px 0;
+  border-radius: 3.33px 3.33px 0 0;
+  cursor: pointer;
+}
+
+h3 {
+  font-size: 21px;
+  font-weight: 400;
+  display: inline-block;
+  width: 270px;
+  margin-left: 20px;
+}
+
+p {
+  text-align: center;
+  padding: 15.5px 0;
+  width: 50px;
+  margin: 0;
+  display: inline-block;
+  border-radius: 3.33px;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* /Text Styles */
+
+
+/* Calendar Styles */
+
+#container {
+  margin: 0 auto;
+  width: 378px;
+  color: white;
+  background-color: #181836ed;
+  border-radius: 3.33px;
+}
+
+#dates {
+  background-color: #181836;
+  height: 324px;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  border-radius: 0 0 3.33px 3.33px;
+  -webkit-box-shadow: 0px 6px 11px -1px rgba(0,0,0,0.6);
+  -moz-box-shadow: 0px 6px 11px -1px rgba(0,0,0,0.6);
+  box-shadow: 0px 6px 11px -1px rgba(0,0,0,0.6);
+}
+
+#head p {
+  font-weight: 700;
+}
+
+.dates {
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all .2s ease-in-out;
+}
+
+.dates:hover {
+  border: 2px solid #f54260;
+}
+
+.selected {
+  background-color: #f54260;
+  color: white;
+  opacity: 1 !important;
+}
+
+#month i {
+  color: #f54260;
+  cursor: pointer;
+  font-size: 25px;
+  margin: 0 10px;
+}
+
+.opacity {
+  opacity: .3;
+}
+
+#calendar {
+  display: none;
+}
+
+/* /Calendar Styles */

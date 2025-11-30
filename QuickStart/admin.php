@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 session_start();
 
@@ -28,7 +28,7 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
 
     if ($result) {
         // Session valid, ambil data user
-        $userid = $_SESSION["aiot_userid"]; 
+        $userid = $_SESSION["aiot_userid"];
         $username = $_SESSION["aiot_nama"];
         $userNIM = $_SESSION["aiot_NIM"];
         $userPBL = $_SESSION["aiot_PBL"];
@@ -41,7 +41,7 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
 
 
         $db = new Database();
-                // Ambil semua data PBL
+        // Ambil semua data PBL
         $sql = "SELECT PBL FROM user";
         $rows = $db->read($sql);
 
@@ -50,15 +50,12 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
             foreach ($rows as $row) {
                 $options .= '<option value="' . htmlspecialchars($row['PBL']) . '">' . htmlspecialchars($row['PBL']) . '</option>';
             }
-        } 
-
-
+        }
     } else {
         // Session tidak valid
         header("Location: login.php");
         exit();
     }
-
 } else {
     // Belum login
     header("Location: login.php");
@@ -130,7 +127,7 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
             <li class="nav-item">
                 <a class="nav-link" href="Kehadiran.php">
                     <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Charts</span></a>
+                    <span>Kehadiran</span></a>
             </li>
 
             <!-- Nav Item - Tables -->
@@ -167,7 +164,25 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
                         </button>
                     </form>
 
- 
+                    <!-- KIRI: Time Display -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="#" id="timeDisplay" style="
+                            border: 2px solid #f4f4f4;
+                            border-radius: 12px;
+                            padding: 12px 20px;
+                            font-size: 18px;
+                            color: rgb(15, 15, 15);
+                            background-color: rgb(#f4f4f4);
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.backgroundColor='#e6f0ff'" onmouseout="this.style.backgroundColor='#f0f8ff'">
+                                <i class="fas fa-clock me-2"></i>
+                                <span id="timeText">TIME</span>
+                            </a>
+                        </li>
+                    </ul>
+
+
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -317,7 +332,7 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" 
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo htmlspecialchars($username); ?></span>
                                 <img class="img-profile rounded-circle"
@@ -353,16 +368,23 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    <!-- Page Heading & Report Button -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Tables</h1>
+                        <a href="#" id="generateReport" class="btn btn-sm btn-primary shadow-sm">
+                            <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
+                        </a>
 
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
-                    <p class="mb-4"></p>
 
-                
+                    </div>
+
+
+
+
                     <!-- DataTales Example -->
                     <div class="card shadow mb-3">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">DataTables </h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -377,7 +399,7 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
                                             <th>Tanggal</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
+                                    <!-- <tfoot>
                                         <tr>
                                             <th>Team</th>
                                             <th>Manager Project</th>
@@ -386,9 +408,9 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
                                             <th>Status</th>
                                             <th>Tanggal</th>
                                         </tr>
-                                    </tfoot>
+                                    </tfoot> -->
                                     <tbody>
-                                    <tr>
+                                        <tr>
                                             <td>SIMALAS</td>
                                             <td>Abdi Wijaya</td>
                                             <td>Esp32</td>
@@ -404,7 +426,7 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
                                             <td>Diloker</td>
                                             <td>2011/06/27</td>
                                         </tr>
-                                           <tr>
+                                        <tr>
                                             <td>SIMALAS</td>
                                             <td>Abdi Wijaya</td>
                                             <td>Arduino Atmega</td>
@@ -418,201 +440,205 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
                         </div>
                     </div>
                     <div class="col-xl-13 col-lg-13">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Locker</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="locker-grid">
-                                        <div class="locker-box">
-                                            <div class="locker-number">1</div>
-                                            <select class="locker-select" data-locker="1" onchange="updateColor(this)">
-                                                <?php
-                                                $lockerNum = 1;
-                                                $currentVal = isset($lockerStatus[$lockerNum]) ? $lockerStatus[$lockerNum] : "";
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Locker</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="locker-grid">
+                                    <div class="locker-box">
+                                        <div class="locker-number">1</div>
+                                        <select class="locker-select" data-locker="1" onchange="updateColor(this)">
+                                            <?php
+                                            $lockerNum = 1;
+                                            $currentVal = isset($lockerStatus[$lockerNum]) ? $lockerStatus[$lockerNum] : "";
 
-                                                echo '<option value="">Pilih</option>';
-                                                echo '<option value="Available"' . ($currentVal == "Available" ? " selected" : "") . '>Available</option>';
+                                            echo '<option value="">Pilih</option>';
+                                            echo '<option value="Available"' . ($currentVal == "Available" ? " selected" : "") . '>Available</option>';
 
-                                                foreach ($rows as $row) {
-                                                    $val = htmlspecialchars($row['PBL']);
-                                                    $selected = ($val == $currentVal) ? " selected" : "";
-                                                    echo '<option value="' . $val . '"' . $selected . '>' . $val . '</option>';
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
+                                            foreach ($rows as $row) {
+                                                $val = htmlspecialchars($row['PBL']);
+                                                $selected = ($val == $currentVal) ? " selected" : "";
+                                                echo '<option value="' . $val . '"' . $selected . '>' . $val . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
 
-                                        <div class="locker-box">
-                                            <div class="locker-number">2</div>
-                                            <select class="locker-select" data-locker="2" onchange="updateColor(this)">
-                                                <?php
-                                                $lockerNum = 2;
-                                                $currentVal = isset($lockerStatus[$lockerNum]) ? $lockerStatus[$lockerNum] : "";
+                                    <div class="locker-box">
+                                        <div class="locker-number">2</div>
+                                        <select class="locker-select" data-locker="2" onchange="updateColor(this)">
+                                            <?php
+                                            $lockerNum = 2;
+                                            $currentVal = isset($lockerStatus[$lockerNum]) ? $lockerStatus[$lockerNum] : "";
 
-                                                echo '<option value="">Pilih</option>';
-                                                echo '<option value="Available"' . ($currentVal == "Available" ? " selected" : "") . '>Available</option>';
+                                            echo '<option value="">Pilih</option>';
+                                            echo '<option value="Available"' . ($currentVal == "Available" ? " selected" : "") . '>Available</option>';
 
-                                                foreach ($rows as $row) {
-                                                    $val = htmlspecialchars($row['PBL']);
-                                                    $selected = ($val == $currentVal) ? " selected" : "";
-                                                    echo '<option value="' . $val . '"' . $selected . '>' . $val . '</option>';
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="locker-box">
-                                            <div class="locker-number">3</div>
-                                            <select class="locker-select" data-locker="3" onchange="updateColor(this)">
-                                                <?php
-                                                $lockerNum = 3;
-                                                $currentVal = isset($lockerStatus[$lockerNum]) ? $lockerStatus[$lockerNum] : "";
+                                            foreach ($rows as $row) {
+                                                $val = htmlspecialchars($row['PBL']);
+                                                $selected = ($val == $currentVal) ? " selected" : "";
+                                                echo '<option value="' . $val . '"' . $selected . '>' . $val . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="locker-box">
+                                        <div class="locker-number">3</div>
+                                        <select class="locker-select" data-locker="3" onchange="updateColor(this)">
+                                            <?php
+                                            $lockerNum = 3;
+                                            $currentVal = isset($lockerStatus[$lockerNum]) ? $lockerStatus[$lockerNum] : "";
 
-                                                echo '<option value="">Pilih</option>';
-                                                echo '<option value="Available"' . ($currentVal == "Available" ? " selected" : "") . '>Available</option>';
+                                            echo '<option value="">Pilih</option>';
+                                            echo '<option value="Available"' . ($currentVal == "Available" ? " selected" : "") . '>Available</option>';
 
-                                                foreach ($rows as $row) {
-                                                    $val = htmlspecialchars($row['PBL']);
-                                                    $selected = ($val == $currentVal) ? " selected" : "";
-                                                    echo '<option value="' . $val . '"' . $selected . '>' . $val . '</option>';
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
-                                        <div class="locker-box">
-                                            <div class="locker-number">4</div>
-                                            <select class="locker-select" data-locker="4" onchange="updateColor(this)">
-                                                <?php
-                                                $lockerNum = 4;
-                                                $currentVal = isset($lockerStatus[$lockerNum]) ? $lockerStatus[$lockerNum] : "";
+                                            foreach ($rows as $row) {
+                                                $val = htmlspecialchars($row['PBL']);
+                                                $selected = ($val == $currentVal) ? " selected" : "";
+                                                echo '<option value="' . $val . '"' . $selected . '>' . $val . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div class="locker-box">
+                                        <div class="locker-number">4</div>
+                                        <select class="locker-select" data-locker="4" onchange="updateColor(this)">
+                                            <?php
+                                            $lockerNum = 4;
+                                            $currentVal = isset($lockerStatus[$lockerNum]) ? $lockerStatus[$lockerNum] : "";
 
-                                                echo '<option value="">Pilih</option>';
-                                                echo '<option value="Available"' . ($currentVal == "Available" ? " selected" : "") . '>Available</option>';
+                                            echo '<option value="">Pilih</option>';
+                                            echo '<option value="Available"' . ($currentVal == "Available" ? " selected" : "") . '>Available</option>';
 
-                                                foreach ($rows as $row) {
-                                                    $val = htmlspecialchars($row['PBL']);
-                                                    $selected = ($val == $currentVal) ? " selected" : "";
-                                                    echo '<option value="' . $val . '"' . $selected . '>' . $val . '</option>';
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
+                                            foreach ($rows as $row) {
+                                                $val = htmlspecialchars($row['PBL']);
+                                                $selected = ($val == $currentVal) ? " selected" : "";
+                                                echo '<option value="' . $val . '"' . $selected . '>' . $val . '</option>';
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
-                            <style>
-                                .locker-grid {
-                                    display: grid;
-                                    grid-template-columns: repeat(4, 1fr);
-                                    gap: 6px;
-                                    padding: 6px;
-                                }
-
-                                .locker-box {
-                                    width: 100%;
-                                    padding-top: 60%;
-                                    background-color: #f0f0f0;
-                                    border: 2px solid #007bff;
-                                    position: relative;
-                                    border-radius: 6px;
-                                    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-                                    overflow: hidden;
-                                    transition: background-color 0.3s ease;
-                                }
-
-                                .locker-number {
-                                    position: absolute;
-                                    top: 10%;
-                                    left: 50%;
-                                    transform: translateX(-50%);
-                                    font-weight: bold;
-                                    color: #007bff;
-                                    font-size: 1rem;
-                                }
-
-                                .locker-select {
-                                    position: absolute;
-                                    bottom: 10%;
-                                    left: 50%;
-                                    transform: translateX(-50%);
-                                    width: 80%;
-                                    padding: 5px;
-                                    font-size: 0.9rem;
-                                    border-radius: 5px;
-                                    border: 1px solid #ccc;
-                                }
-                            </style>
-
-
-                            <script>
-                                let selectedPBL = "";
-
-                                function updateColor(selectElement, triggerModal = true) {
-                                    const box = selectElement.closest('.locker-box');
-                                    const value = selectElement.value;
-
-                                    if (value === 'Available') {
-                                        box.style.backgroundColor = '#d4edda';
-                                        const lockerNumber = selectElement.getAttribute("data-locker");
-                                        const data = [{ locker: lockerNumber, pbl: value }];
-
-                                        const xhr = new XMLHttpRequest();
-                                        xhr.open("POST", "classes/set_loker.php", true);
-                                        xhr.setRequestHeader("Content-type", "application/json");
-
-                                        xhr.onload = function () {
-                                            console.log("Status updated to Available.");
-                                        };
-
-                                        xhr.onerror = function () {
-                                            console.log("Gagal kirim data ke server.");
-                                        };
-
-                                        xhr.send(JSON.stringify(data));
-                                    } else if (value !== '') {
-                                        box.style.backgroundColor = '#f8d7da';
-                                        if (triggerModal) {
-                                            // PAKAI JQUERY MODAL BOOTSTRAP 4
-                                            $('#setupModal').modal('show');
-                                        }
-                                    } else {
-                                        box.style.backgroundColor = '#f0f0f0';
-                                    }
-                                }
-
-                                document.addEventListener("DOMContentLoaded", function () {
-                                    document.querySelectorAll('.locker-select').forEach(select => updateColor(select, false));
-
-                                    document.getElementById("setup_button").addEventListener("click", async function () {
-                                        const selects = document.querySelectorAll(".locker-select");
-                                        const data = Array.from(selects).map(select => ({
-                                            locker: select.getAttribute("data-locker"),
-                                            pbl: select.value
-                                        }));
-
-                                        try {
-                                            const response = await fetch("classes/set_loker.php", {
-                                                method: "POST",
-                                                headers: { "Content-Type": "application/json" },
-                                                body: JSON.stringify(data)
-                                            });
-                                            const result = await response.text();
-                                            alert(result);
-                                        } catch (error) {
-                                            alert("Gagal kirim data ke server.");
-                                        } finally {
-                                            // TUTUP MODAL PAKAI JQUERY
-                                            $('#setupModal').modal('hide');
-                                        }
-                                    });
-                                });
-
-                            </script>
                     </div>
+
+
+                    <style>
+                        .locker-grid {
+                            display: grid;
+                            grid-template-columns: repeat(4, 1fr);
+                            gap: 6px;
+                            padding: 6px;
+                        }
+
+                        .locker-box {
+                            width: 100%;
+                            padding-top: 60%;
+                            background-color: #f0f0f0;
+                            border: 2px solid #007bff;
+                            position: relative;
+                            border-radius: 6px;
+                            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+                            overflow: hidden;
+                            transition: background-color 0.3s ease;
+                        }
+
+                        .locker-number {
+                            position: absolute;
+                            top: 10%;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            font-weight: bold;
+                            color: #007bff;
+                            font-size: 1rem;
+                        }
+
+                        .locker-select {
+                            position: absolute;
+                            bottom: 10%;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            width: 80%;
+                            padding: 5px;
+                            font-size: 0.9rem;
+                            border-radius: 5px;
+                            border: 1px solid #ccc;
+                        }
+                    </style>
+
+
+                    <script>
+                        let selectedPBL = "";
+
+                        function updateColor(selectElement, triggerModal = true) {
+                            const box = selectElement.closest('.locker-box');
+                            const value = selectElement.value;
+
+                            if (value === 'Available') {
+                                box.style.backgroundColor = '#d4edda';
+                                const lockerNumber = selectElement.getAttribute("data-locker");
+                                const data = [{
+                                    locker: lockerNumber,
+                                    pbl: value
+                                }];
+
+                                const xhr = new XMLHttpRequest();
+                                xhr.open("POST", "classes/set_loker.php", true);
+                                xhr.setRequestHeader("Content-type", "application/json");
+
+                                xhr.onload = function() {
+                                    console.log("Status updated to Available.");
+                                };
+
+                                xhr.onerror = function() {
+                                    console.log("Gagal kirim data ke server.");
+                                };
+
+                                xhr.send(JSON.stringify(data));
+                            } else if (value !== '') {
+                                box.style.backgroundColor = '#f8d7da';
+                                if (triggerModal) {
+                                    // PAKAI JQUERY MODAL BOOTSTRAP 4
+                                    $('#setupModal').modal('show');
+                                }
+                            } else {
+                                box.style.backgroundColor = '#f0f0f0';
+                            }
+                        }
+
+                        document.addEventListener("DOMContentLoaded", function() {
+                            document.querySelectorAll('.locker-select').forEach(select => updateColor(select, false));
+
+                            document.getElementById("setup_button").addEventListener("click", async function() {
+                                const selects = document.querySelectorAll(".locker-select");
+                                const data = Array.from(selects).map(select => ({
+                                    locker: select.getAttribute("data-locker"),
+                                    pbl: select.value
+                                }));
+
+                                try {
+                                    const response = await fetch("classes/set_loker.php", {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json"
+                                        },
+                                        body: JSON.stringify(data)
+                                    });
+                                    const result = await response.text();
+                                    alert(result);
+                                } catch (error) {
+                                    alert("Gagal kirim data ke server.");
+                                } finally {
+                                    // TUTUP MODAL PAKAI JQUERY
+                                    $('#setupModal').modal('hide');
+                                }
+                            });
+                        });
+                    </script>
                 </div>
+            </div>
 
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
@@ -635,79 +661,152 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
         <i class="fas fa-angle-up"></i>
     </a>
 
-       <!-- Logout Modal-->
-        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button class="btn btn-primary" id="logout_button">Logout</button>
-                    </div>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" id="logout_button">Logout</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <script>
-            document.getElementById("logout_button").addEventListener("click", function() {
-                window.location.href = "logout.php";
-            });
-        </script>
+    <script>
+        document.getElementById("logout_button").addEventListener("click", function() {
+            window.location.href = "logout.php";
+        });
+    </script>
 
-            <!-- Setup Modal-->
-        <div class="modal fade" id="setupModal" tabindex="-1" role="dialog" aria-labelledby="setupModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="setupModalLabel">System Setup</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        Select "Set Up" to proceed with the system configuration.
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button class="btn btn-success" id="setup_button">Set Up</button>
-                    </div>
+    <!-- Setup Modal-->
+    <div class="modal fade" id="setupModal" tabindex="-1" role="dialog" aria-labelledby="setupModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="setupModalLabel">System Setup</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Select "Set Up" to proceed with the system configuration.
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-success" id="setup_button">Set Up</button>
                 </div>
             </div>
         </div>
+    </div>
 
-          <script>
-            document.getElementById("setup_button").addEventListener("click", async function () {
-                const selects = document.querySelectorAll(".locker-select");
-                const data = Array.from(selects).map(select => ({
-                    locker: select.getAttribute("data-locker"),
-                    pbl: select.value
-                }));
+    <script>
+        document.getElementById("setup_button").addEventListener("click", async function() {
+            const selects = document.querySelectorAll(".locker-select");
+            const data = Array.from(selects).map(select => ({
+                locker: select.getAttribute("data-locker"),
+                pbl: select.value
+            }));
 
-                try {
-                    const response = await fetch("classes/set_loker.php", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(data)
-                    });
-                    const result = await response.text();
-                    alert(result);
-                    $('#setupModal').modal('hide'); // Langsung tutup modal setelah alert
-                } catch (error) {
-                    alert("Gagal kirim data ke server.");
+            try {
+                const response = await fetch("classes/set_loker.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.text();
+                alert(result);
+                $('#setupModal').modal('hide'); // Langsung tutup modal setelah alert
+            } catch (error) {
+                alert("Gagal kirim data ke server.");
+            }
+        });
+    </script>
+
+
+    <script>
+        function updateTime() {
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+
+            // Menambahkan '0' jika nilainya kurang dari 10
+            hours = hours < 10 ? '0' + hours : hours;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            var timeString = hours + ':' + minutes + ':' + seconds;
+            document.getElementById('timeDisplay').textContent = timeString;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "fetch_time.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    var response = JSON.parse(xhr.responseText);
+                    console.log(response);
+                }
+            };
+            xhr.send("client_time=" + timeString);
+
+
+        }
+        setInterval(updateTime, 1000);
+        setInterval(sendTimeToServer, 1000);
+    </script>
+
+    <script>
+        document.getElementById("generateReport").addEventListener("click", () => {
+            const {
+                jsPDF
+            } = window.jspdf;
+            const doc = new jsPDF('landscape'); // Landscape
+
+            doc.text("Laporan Data Barang", 14, 15);
+
+            // Ambil tabel dan ubah jadi PDF
+            doc.autoTable({
+                html: '#dataTable',
+                startY: 20,
+                styles: {
+                    fontSize: 10,
+                    cellPadding: 3
+                },
+                headStyles: {
+                    fillColor: [41, 128, 185]
                 }
             });
 
-        </script>
+            doc.save("laporan_barang.pdf");
+        });
+    </script>
+
+
+
+
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- jsPDF AutoTable -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

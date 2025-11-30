@@ -14,7 +14,7 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
 
     if ($result) {
         // Session valid, ambil data user
-        $userid = $_SESSION["aiot_userid"]; 
+        $userid = $_SESSION["aiot_userid"];
         $username = $_SESSION["aiot_nama"];
         $userNIM = $_SESSION["aiot_NIM"];
         $userPBL = $_SESSION["aiot_PBL"];
@@ -29,14 +29,11 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
         header("Location: login.php");
         exit();
     }
-
 } else {
     // Belum login
     header("Location: login.php");
     exit();
 }
-
-
 
 ?>
 
@@ -52,7 +49,7 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    
+
     <title>Simalas - Kehadiran</title>
     <link href="assets/img/brail2.png" rel="icon">
     <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
@@ -67,48 +64,32 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
     <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
-
-
 </head>
 
 <body id="page-top">
-
     <!-- Page Wrapper -->
     <div id="wrapper">
-
         <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.php">
                 <div class="sidebar-brand-icon rotate-n-15">
-                   
-                <img src="assets/img/brail2.png" alt="custom icon" width="40" height="40">
+                    <img src="assets/img/brail2.png" alt="custom icon" width="40" height="40">
                 </div>
                 <div class="sidebar-brand-text mx-3">Simalas <sup>2025</sup></div>
             </a>
-
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
-
-            <!-- Nav Item - Dashboard -->
             <li class="nav-item">
                 <a class="nav-link" href="dashboard.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
 
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Nav Item - Pages Collapse Menu -->
-
-            <!-- Nav Item - Utilities Collapse Menu -->
-
-            <!-- Heading -->
+            <!-- <hr class="sidebar-divider">
             <div class="sidebar-heading">
                 Addons
-            </div>
+            </div> -->
 
             <!-- Nav Item - Charts -->
             <li class="nav-item active">
@@ -118,11 +99,11 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
             </li>
 
             <!-- Nav Item - Tables -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="admin.php">
                     <i class="fa fa-users"></i>
                     <span>Admin</span></a>
-            </li>
+            </li> -->
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -133,69 +114,46 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
             </div>
 
         </ul>
-        <!-- End of Sidebar -->
 
-        <!-- Content Wrapper -->
+
         <div id="content-wrapper" class="d-flex flex-column">
 
             <!-- Main Content -->
             <div id="content">
 
                 <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow d-flex justify-content-between">
+                    <!-- KIRI: Time Display -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="#" id="timeDisplay" style="
+                            border: 2px solid #f4f4f4;
+                            border-radius: 12px;
+                            padding: 12px 20px;
+                            font-size: 18px;
+                            color: rgb(15, 15, 15);
+                            background-color: rgb(#f4f4f4);
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.backgroundColor='#e6f0ff'" onmouseout="this.style.backgroundColor='#f0f8ff'">
+                                <i class="fas fa-clock me-2"></i>
+                                <span id="timeText">TIME</span>
+                            </a>
+                        </li>
+                    </ul>
 
-
-
-                    <!-- Topbar Navbar -->
+                    <!-- KANAN: Menu lainnya -->
                     <ul class="navbar-nav ml-auto">
-
                         <!-- Nav Item - Alerts -->
                         <li class="nav-item dropdown no-arrow mx-1">
                             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-bell fa-fw"></i>
-                                <!-- Counter - Alerts -->
                                 <span class="badge badge-danger badge-counter">3+</span>
                             </a>
-                            <!-- Dropdown - Alerts -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="alertsDropdown">
-                                <h6 class="dropdown-header">
-                                    Alerts Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-file-alt text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 12, 2019</div>
-                                        <span class="font-weight-bold">A new monthly report is ready to download!</span>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-success">
-                                            <i class="fas fa-donate text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 7, 2019</div>
-                                        $290.29 has been deposited into your account!
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-warning">
-                                            <i class="fas fa-exclamation-triangle text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 2, 2019</div>
-                                        Spending Alert: We've noticed unusually high spending for your account.
-                                    </div>
-                                </a>
+                                <h6 class="dropdown-header">Alerts Center</h6>
+                                <!-- Alert items here -->
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
                             </div>
                         </li>
@@ -205,63 +163,12 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
                             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-envelope fa-fw"></i>
-                                <!-- Counter - Messages -->
                                 <span class="badge badge-danger badge-counter">7</span>
                             </a>
-                            <!-- Dropdown - Messages -->
                             <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="messagesDropdown">
-                                <h6 class="dropdown-header">
-                                    Message Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_1.svg"
-                                            alt="...">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div class="font-weight-bold">
-                                        <div class="text-truncate">Hi there! I am wondering if you can help me with a
-                                            problem I've been having.</div>
-                                        <div class="small text-gray-500">Emily Fowler · 58m</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_2.svg"
-                                            alt="...">
-                                        <div class="status-indicator"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">I have the photos that you ordered last month, how
-                                            would you like them sent to you?</div>
-                                        <div class="small text-gray-500">Jae Chun · 1d</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_3.svg"
-                                            alt="...">
-                                        <div class="status-indicator bg-warning"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Last month's report looks great, I am very happy with
-                                            the progress so far, keep up the good work!</div>
-                                        <div class="small text-gray-500">Morgan Alvarez · 2d</div>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
-                                            alt="...">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div>
-                                        <div class="text-truncate">Am I a good boy? The reason I ask is because someone
-                                            told me that people say this to all dogs, even if they aren't good...</div>
-                                        <div class="small text-gray-500">Chicken the Dog · 2w</div>
-                                    </div>
-                                </a>
+                                <h6 class="dropdown-header">Message Center</h6>
+                                <!-- Message items here -->
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
                             </div>
                         </li>
@@ -273,28 +180,22 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo htmlspecialchars($username); ?></span>
-                                <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
                             </a>
-                            <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
                                 <a class="dropdown-item" href="#">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Profile
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> Profile
                                 </a>
                                 <a class="dropdown-item" href="#">
-                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Settings
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i> Settings
                                 </a>
                                 <a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Activity Log
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i> Activity Log
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> Logout
                                 </a>
                             </div>
                         </li>
@@ -302,141 +203,194 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
                     </ul>
 
                 </nav>
+
                 <!-- End of Topbar -->
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Rekap Kehadiran</h1>
-                    <p class="mb-4"></p>
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Rekap Kehadiran</h1>
+                        <a href="#" id="generateReport" class="btn btn-sm btn-primary shadow-sm">
+                            <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
+                        </a>
 
-                    <!-- Content Row -->
-                    <div class="row">
-
-                        <div class="col-xl-8 col-lg-7">
-
-
-                        <!-- Projects - moved to the right -->
-                    <div class="col-lg-14 mb-4">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Presentasi Kehadiran</h6>
-                            </div>
-                            <div class="card-body">
-                                <h4 class="small font-weight-bold">Absent <span class="float-right">20%</span></h4>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
-                                        aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <h4 class="small font-weight-bold">In Late <span class="float-right">40%</span></h4>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                                        aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <h4 class="small font-weight-bold">Present <span class="float-right">60%</span></h4>
-                                <div class="progress mb-4">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: 60%"
-                                        aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-                    
-               
+                    <!-- Content Row: Presentasi dan Donut -->
+                    <div class="row">
+                        <!-- Presentasi Kehadiran (Progress bar) -->
+                        <div class="col-xl-8 col-lg-7 mb-4">
+                            <div class="card shadow h-100">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Presentasi Kehadiran</h6>
+                                </div>
+                                <div class="card-body">
+                                    <h4 class="small font-weight-bold">Absent <span class="float-right" id="absentText">0%</span></h4>
+                                    <div class="progress mb-4">
+                                        <div id="absentBar" class="progress-bar bg-danger" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
 
+                                    <h4 class="small font-weight-bold">In Late <span class="float-right" id="lateText">0%</span></h4>
+                                    <div class="progress mb-4">
+                                        <div id="lateBar" class="progress-bar bg-warning" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+
+                                    <h4 class="small font-weight-bold">Present <span class="float-right" id="presentText">0%</span></h4>
+                                    <div class="progress mb-4">
+                                        <div id="presentBar" class="progress-bar bg-success" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Donut Chart -->
-                        <div class="col-xl-4 col-lg-3">
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
+                        <div class="col-xl-4 col-lg-5 mb-4">
+                            <div class="card shadow h-100">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Attandance Chart</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">Attendance Chart</h6>
                                 </div>
-                                <!-- Card Body -->
-                                    <div class="card-body">
-                                        <div class="chart-pie pt-4 pb-2">
-                                            <canvas id="myPieChart"></canvas>
+                                <div class="card-body">
+                                    <div class="chart-pie pt-4 pb-2">
+                                        <canvas id="myPieChart"></canvas>
+                                    </div>
+                                    <div class="mt-4 text-center small">
+                                        <span class="mr-2"><i class="fas fa-circle text-success"></i> Present</span>
+                                        <span class="mr-2"><i class="fas fa-circle text-warning"></i> In Late</span>
+                                        <span class="mr-2"><i class="fas fa-circle text-danger"></i> Absent</span>
+                                    </div>
+                                    <div class="mt-2 text-center small" id="totalDays">Total: - hari</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <style>
+                        .calendar-select {
+                            padding: 5px 10px;
+                            border-radius: 10px;
+                            border: 1px solid #ddd;
+                            background-color: #f8f9fc;
+                            color: #4e73df;
+                            font-weight: bold;
+                            margin-left: 5px;
+                            margin-right: 5px;
+                        }
+
+                        .calendar-select:focus {
+                            outline: none;
+                            box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+                            border-color: #4e73df;
+                        }
+
+                        .calendar-toolbar {
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                        }
+
+                        @media (max-width: 576px) {
+                            .calendar-toolbar {
+                                flex-direction: column;
+                                align-items: flex-start;
+                            }
+                        }
+                    </style>
+
+
+                    <!-- Kalender + Tabel Kehadiran dalam 1 Baris -->
+                    <div class="row">
+                        <!-- Kalender Kehadiran -->
+                        <div class="col-xl-5 col-lg-5 mb-4">
+                            <div class="card shadow h-100">
+                                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                                    <h6 class="m-0 font-weight-bold text-primary">Kalender Kehadiran</h6>
+                                    <div class="calendar-toolbar">
+                                        <select id="monthSelect" class="calendar-select"></select>
+                                        <select id="yearSelect" class="calendar-select"></select>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-bordered text-center mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Minggu</th>
+                                                <th>Senin</th>
+                                                <th>Selasa</th>
+                                                <th>Rabu</th>
+                                                <th>Kamis</th>
+                                                <th>Jumat</th>
+                                                <th>Sabtu</th>
+                                            </tr>
+                                        </thead>
+                                        <div class="mt-2 text-center medium">
+                                            <span class="badge bg-success text-light">Present</span>
+                                            <span class="badge bg-warning text-dark">In Late</span>
+                                            <span class="badge bg-danger text-light">Absent</span>
                                         </div>
-                                        <div class="mt-4 text-center small">
-                                            <span class="mr-2"><i class="fas fa-circle text-success"></i> Present</span>
-                                            <span class="mr-2"><i class="fas fa-circle text-warning"></i> In Late</span>
-                                            <span class="mr-2"><i class="fas fa-circle text-danger"></i> Absent</span>
-                                        </div>
-                                    </div>                 
+
+                                        <tbody id="calendarBody"></tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
 
-                <!-- DataTales Example -->
-                <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Data Kehadiran</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Nama</th>
-                                            <th>NIM</th>
-                                            <th>PBL</th>
-                                            <th>Absen Hadir</th>
-                                            <th>Absen Pulang</th>
-                                            <th>Tanggal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                            <td>Abdi Wijaya</td>
-                                            <td>4222201044</td>
-                                            <td>KRAI</td>
-                                            <td>12:00</td>
-                                            <td>13:00</td>
-                                            <td>2008/11/13</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Abdi Wijaya</td>
-                                            <td>4222201044</td>
-                                            <td>KRAI</td>
-                                            <td>09:00</td>
-                                            <td>18:00</td>
-                                            <td>2071/06/27</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                        <!-- Tabel Data Kehadiran -->
+                        <div class="col-xl-7 col-lg-7 mb-4">
+                            <div class="card shadow h-100">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Data Kehadiran</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nama</th>
+                                                    <th>NIM</th>
+                                                    <th>PBL</th>
+                                                    <th>Absen Hadir</th>
+                                                    <th>Absen Pulang</th>
+                                                    <th>Tanggal</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="absen-body">
+                                                <tr>
+                                                    <td colspan="6">Memuat data...</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
-              
+                        </div>
+                    </div>
+
+
 
                 </div>
-                <!-- /.container-fluid -->
+                <!-- End of Main Content -->
+
+                <!-- Footer -->
+                <footer class="sticky-footer bg-white">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span>Copyright &copy; Simalas 2025</span>
+                        </div>
+                    </div>
+                </footer>
+                <!-- End of Footer -->
 
             </div>
-            <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Simalas 2025</span>
-                    </div>
-                </div>
-            </footer>
-            <!-- End of Footer -->
+            <!-- End of Content Wrapper -->
 
         </div>
-        <!-- End of Content Wrapper -->
+        <!-- End of Page Wrapper -->
 
-    </div>
-    <!-- End of Page Wrapper -->
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top">
+            <i class="fas fa-angle-up"></i>
+        </a>
 
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Logout Modal-->
+        <!-- Logout Modal-->
         <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -462,30 +416,46 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
             });
         </script>
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="js/user/pie.js"></script>
+        <script src="js/user/calendar.js"></script>
 
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
+        <script src="js/user/proggresbar.js"></script>
+        <script src="js/user/table.js"></script>
+        <script src="js/demo/time.js"></script>
+        <script src="js/generate_report.js"></script>
 
-    <!-- Page level plugins -->
-    <script src="vendor/chart.js/Chart.min.js"></script>
+        <!-- jsPDF -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    <!-- Page level custom scripts -->
-    <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script>
-    <script src="js/demo/chart-bar-demo.js"></script>
-    
-    <!-- Page level plugins -->
-    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+        <!-- jsPDF AutoTable -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
-    <!-- Page level custom scripts -->
-    <script src="js/demo/datatables-demo.js"></script>
+        <!-- Bootstrap core JavaScript-->
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Core plugin JavaScript-->
+        <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+        <!-- Custom scripts for all pages-->
+        <script src="js/sb-admin-2.min.js"></script>
+
+        <!-- Page level plugins -->
+        <script src="vendor/chart.js/Chart.min.js"></script>
+
+        <!-- Page level custom scripts -->
+        <script src="js/demo/chart-area-demo.js"></script>
+        <script src="js/demo/chart-pie-demo.js"></script>
+        <script src="js/demo/chart-bar-demo.js"></script>
+
+        <!-- Page level plugins -->
+        <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+        <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+        <!-- Page level custom scripts -->
+        <script src="js/demo/datatables-demo.js"></script>
 
 
 </body>
