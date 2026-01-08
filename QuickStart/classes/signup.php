@@ -2,7 +2,6 @@
 
 class Signup
 {
-
     private $error = "";
 
     public function evaluate($data)
@@ -31,45 +30,63 @@ class Signup
         $gender = isset($data['gender']) ? $data['gender'] : '';
         $Angkatan = isset($data['Angkatan']) ? $data['Angkatan'] : '';
 
-        // Cek apakah NIM sudah terdaftar
         $DB = new Database();
+
+        // 1. Cek apakah NIM sudah terdaftar
         $nim_check_query = "SELECT * FROM user WHERE NIM = '$NIM'";
         $result_nim = $DB->read($nim_check_query);
 
-        // Cek apakah email sudah terdaftar
+        // 2. Cek apakah email sudah terdaftar
         $email_check_query = "SELECT * FROM user WHERE email = '$email'";
         $result_email = $DB->read($email_check_query);
 
         if (is_array($result_nim) && count($result_nim) > 0) {
-            // NIM sudah terdaftar
             return "NIM sudah terdaftar, gunakan NIM lain!";
         } elseif (is_array($result_email) && count($result_email) > 0) {
-            // Email sudah terdaftar
             return "Email sudah terdaftar, gunakan email lain!";
         } else {
-            // NIM dan email belum terdaftar, lanjutkan pendaftaran
-            $hashedPassword = password_hash($Password, PASSWORD_DEFAULT);
-            $url_addres = strtolower($Nama) . "." . strtolower($NIM);
+            // 3. NIM dan email aman. Sekarang cari UserID
             $userid = $this->create_userid();
 
-            $query = "INSERT INTO user (userid, Nama, NIM, PBL, Password, email, gender,Angkatan, url_addres) 
-                      VALUES ('$userid', '$Nama', '$NIM', '$PBL', '$hashedPassword', '$email', '$gender','$Angkatan', '$url_addres')";
+            // Jika UserID false, berarti penuh (1-127 terpakai semua)
+            if ($userid === false) {
+                return "Maaf, Database Penuh (Maksimal 127 User). Hubungi Admin.";
+            }
+
+            $hashedPassword = password_hash($Password, PASSWORD_DEFAULT);
+            $url_addres = strtolower($Nama) . "." . strtolower($NIM);
+
+            // Simpan data dengan UserID yang sudah divalidasi (1-127)
+            $query = "INSERT INTO user (userid, Nama, NIM, PBL, Password, email, gender, Angkatan, url_addres) 
+                      VALUES ('$userid', '$Nama', '$NIM', '$PBL', '$hashedPassword', '$email', '$gender', '$Angkatan', '$url_addres')";
 
             $DB->save($query);
+            
+            // Redirect ke login
             header("Location: login.php");
             exit();
-            return "Pendaftaran berhasil!";
         }
     }
 
+    // --- FUNGSI BARU: MENCARI SLOT KOSONG 1-127 ---
     private function create_userid()
     {
-        $length = rand(1, 3); // Panjang antara 1 sampai 3 digit
-        $number = "";
-        for ($i = 0; $i < $length; $i++) {
-            $new_rand = rand(0, 9); // Angka 0-9
-            $number .= $new_rand;
+        $DB = new Database();
+        
+        // Loop dari angka 1 sampai 127
+        for ($i = 1; $i <= 127; $i++) {
+            // Cek apakah angka $i ini sudah dipakai orang lain?
+            $query = "SELECT userid FROM user WHERE userid = '$i' LIMIT 1";
+            $result = $DB->read($query);
+
+            // Jika result kosong (tidak ada data), berarti angka $i TERSEDIA
+            if (!is_array($result) || count($result) == 0) {
+                return $i; // Kembalikan angka ini untuk dipakai
+            }
         }
-        return $number;
+
+        // Jika loop selesai dan tidak ada yang return, berarti penuh
+        return false;
     }
 }
+?>

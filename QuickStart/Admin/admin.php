@@ -1,69 +1,46 @@
 <?php
-
 session_start();
-
 include("../classes/connect.php");
 include("../classes/login.php");
 
+$db = new Database();
+$conn = $db->connect();
 
-$db = new Database(); // Tambahkan ini dulu
-$conn = $db->connect(); // Kemudian gunakan $conn untuk query langsung
-
-$lockerStatus = [];
-$sql = "SELECT locker_number, PBL FROM locker_status";
-$result = $conn->query($sql);
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $lockerStatus[$row['locker_number']] = $row['PBL'];
-    }
-}
-
-// Cek apakah user sudah login
+// 1. Cek Login & Otoritas Admin
 if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
-
     $id = $_SESSION["aiot_userid"];
     $login = new Login();
     $result = $login->check_login($id);
 
-
     if ($result) {
-        // Session valid, ambil data user
-        $userid = $_SESSION["aiot_userid"];
+        // Tambahkan pengecekan role (Hanya admin yang boleh akses halaman ini)
+        if ($_SESSION["aiot_role"] !== 'admin') {
+            header("Location: dashboard.php");
+            exit();
+        }
+
         $username = $_SESSION["aiot_nama"];
-        $userNIM = $_SESSION["aiot_NIM"];
-        $userPBL = $_SESSION["aiot_PBL"];
-        $useremail = $_SESSION["aiot_email"];
+        
+        // Ambil daftar PBL UNIK (DISTINCT) agar dropdown tidak penuh duplikat
+        $sqlPBL = "SELECT DISTINCT PBL FROM user WHERE PBL != ''";
+        $rowsPBL = $db->read($sqlPBL);
 
-        // Mencegah tampilan cache setelah logout
-        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-        header("Pragma: no-cache");
-        header("Expires: 0");
-
-
-        $db = new Database();
-        // Ambil semua data PBL
-        $sql = "SELECT PBL FROM user";
-        $rows = $db->read($sql);
-
-        if ($rows) {
-            $options = "";
-            foreach ($rows as $row) {
-                $options .= '<option value="' . htmlspecialchars($row['PBL']) . '">' . htmlspecialchars($row['PBL']) . '</option>';
+        // Ambil Status Loker saat ini
+        $lockerStatus = [];
+        $sqlLock = "SELECT locker_number, PBL FROM locker_status";
+        $resLock = $conn->query($sqlLock);
+        if ($resLock && $resLock->num_rows > 0) {
+            while ($r = $resLock->fetch_assoc()) {
+                $lockerStatus[$r['locker_number']] = $r['PBL'];
             }
         }
     } else {
-        // Session tidak valid
-        header("Location: ../login.php");
-        exit();
+        header("Location: ../login.php"); exit();
     }
 } else {
-    // Belum login
-    header("Location: ../login.php");
-    exit();
+    header("Location: ../login.php"); exit();
 }
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -435,119 +412,34 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
                             </div>
                             <div class="card-body">
                                 <div class="locker-grid">
-                                    <div class="locker-box">
-                                        <div class="locker-number">4</div>
-                                        <select class="locker-select" data-locker="4" onchange="updateColor(this)">
-                                            <?php
-                                            $lockerNum = 1;
-                                            $currentVal = isset($lockerStatus[$lockerNum]) ? $lockerStatus[$lockerNum] : "";
+                                    <?php
+                                    // Loop otomatis untuk membuat 4 loker
+                                    for ($i = 1; $i <= 4; $i++) {
+                                        $currentVal = isset($lockerStatus[$i]) ? $lockerStatus[$i] : "";
+                                        // Warna dinamis: Hijau jika Available, Merah jika terisi, Abu jika kosong
+                                        $bgColor = ($currentVal == "Available") ? "#d4edda" : ($currentVal != "" ? "#f8d7da" : "#f0f0f0");
+                                    ?>
+                                        <div class="locker-box" style="background-color: <?php echo $bgColor; ?>;">
+                                            <div class="locker-number"><?php echo $i; ?></div>
+                                            
+                                            <select class="locker-select" data-locker="<?php echo $i; ?>" onchange="updateColor(this)">
+                                                <?php
+                                                echo '<option value="">Pilih</option>';
+                                                echo '<option value="Available"' . ($currentVal == "Available" ? " selected" : "") . '>Available</option>';
 
-                                            // Tampilkan opsi default dan "Available"
-                                            echo '<option value="">Pilih</option>';
-                                            echo '<option value="Available"' . ($currentVal == "Available" ? " selected" : "") . '>Available</option>';
-
-                                            // Ambil daftar PBL unik
-                                            $pblList = [];
-                                            foreach ($rows as $row) {
-                                                $val = htmlspecialchars($row['PBL']);
-                                                if (!in_array($val, $pblList) && strtolower($val) !== 'available') {
-                                                    $pblList[] = $val;
+                                                if ($rowsPBL) {
+                                                    foreach ($rowsPBL as $row) {
+                                                        $val = htmlspecialchars($row['PBL']);
+                                                        if (strtolower($val) !== 'available') {
+                                                            $selected = ($val == $currentVal) ? " selected" : "";
+                                                            echo '<option value="' . $val . '"' . $selected . '>' . $val . '</option>';
+                                                        }
+                                                    }
                                                 }
-                                            }
-
-                                            // Tampilkan opsi PBL unik
-                                            foreach ($pblList as $val) {
-                                                $selected = ($val == $currentVal) ? " selected" : "";
-                                                echo '<option value="' . $val . '"' . $selected . '>' . $val . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-
-                                    <div class="locker-box">
-                                        <div class="locker-number">4</div>
-                                        <select class="locker-select" data-locker="4" onchange="updateColor(this)">
-                                            <?php
-                                            $lockerNum = 2;
-                                            $currentVal = isset($lockerStatus[$lockerNum]) ? $lockerStatus[$lockerNum] : "";
-
-                                            // Tampilkan opsi default dan "Available"
-                                            echo '<option value="">Pilih</option>';
-                                            echo '<option value="Available"' . ($currentVal == "Available" ? " selected" : "") . '>Available</option>';
-
-                                            // Ambil daftar PBL unik
-                                            $pblList = [];
-                                            foreach ($rows as $row) {
-                                                $val = htmlspecialchars($row['PBL']);
-                                                if (!in_array($val, $pblList) && strtolower($val) !== 'available') {
-                                                    $pblList[] = $val;
-                                                }
-                                            }
-
-                                            // Tampilkan opsi PBL unik
-                                            foreach ($pblList as $val) {
-                                                $selected = ($val == $currentVal) ? " selected" : "";
-                                                echo '<option value="' . $val . '"' . $selected . '>' . $val . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                    <div class="locker-box">
-                                        <div class="locker-number">4</div>
-                                        <select class="locker-select" data-locker="4" onchange="updateColor(this)">
-                                            <?php
-                                            $lockerNum = 3;
-                                            $currentVal = isset($lockerStatus[$lockerNum]) ? $lockerStatus[$lockerNum] : "";
-
-                                            // Tampilkan opsi default dan "Available"
-                                            echo '<option value="">Pilih</option>';
-                                            echo '<option value="Available"' . ($currentVal == "Available" ? " selected" : "") . '>Available</option>';
-
-                                            // Ambil daftar PBL unik
-                                            $pblList = [];
-                                            foreach ($rows as $row) {
-                                                $val = htmlspecialchars($row['PBL']);
-                                                if (!in_array($val, $pblList) && strtolower($val) !== 'available') {
-                                                    $pblList[] = $val;
-                                                }
-                                            }
-
-                                            // Tampilkan opsi PBL unik
-                                            foreach ($pblList as $val) {
-                                                $selected = ($val == $currentVal) ? " selected" : "";
-                                                echo '<option value="' . $val . '"' . $selected . '>' . $val . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                    <div class="locker-box">
-                                        <div class="locker-number">4</div>
-                                        <select class="locker-select" data-locker="4" onchange="updateColor(this)">
-                                            <?php
-                                            $lockerNum = 4;
-                                            $currentVal = isset($lockerStatus[$lockerNum]) ? $lockerStatus[$lockerNum] : "";
-
-                                            // Tampilkan opsi default dan "Available"
-                                            echo '<option value="">Pilih</option>';
-                                            echo '<option value="Available"' . ($currentVal == "Available" ? " selected" : "") . '>Available</option>';
-
-                                            // Ambil daftar PBL unik
-                                            $pblList = [];
-                                            foreach ($rows as $row) {
-                                                $val = htmlspecialchars($row['PBL']);
-                                                if (!in_array($val, $pblList) && strtolower($val) !== 'available') {
-                                                    $pblList[] = $val;
-                                                }
-                                            }
-
-                                            // Tampilkan opsi PBL unik
-                                            foreach ($pblList as $val) {
-                                                $selected = ($val == $currentVal) ? " selected" : "";
-                                                echo '<option value="' . $val . '"' . $selected . '>' . $val . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
+                                                ?>
+                                            </select>
+                                        </div>
+                                    <?php } ?>
                                 </div>
                             </div>
                         </div>

@@ -1,69 +1,56 @@
 <?php
-
 session_start();
-
 include("classes/connect.php");
 include("classes/login.php");
 
+$db = new Database();
+$conn = $db->connect();
 
-$db = new Database(); // Tambahkan ini dulu
-$conn = $db->connect(); // Kemudian gunakan $conn untuk query langsung
-
-$lockerStatus = [];
-$sql = "SELECT locker_number, PBL FROM locker_status";
-$result = $conn->query($sql);
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $lockerStatus[$row['locker_number']] = $row['PBL'];
-    }
-}
-
-// Cek apakah user sudah login
+// 1. Cek Login & Role Admin
 if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
-
     $id = $_SESSION["aiot_userid"];
     $login = new Login();
     $result = $login->check_login($id);
 
-
     if ($result) {
-        // Session valid, ambil data user
-        $userid = $_SESSION["aiot_userid"];
+        // TAMBAHAN: Cek apakah role-nya 'admin'
+        // Jika user.sql Anda menyimpan role di session saat login:
+        if ($_SESSION["aiot_role"] !== 'admin') {
+            header("Location: dashboard.php"); // Lempar user biasa ke dashboard
+            exit();
+        }
+
         $username = $_SESSION["aiot_nama"];
         $userNIM = $_SESSION["aiot_NIM"];
         $userPBL = $_SESSION["aiot_PBL"];
-        $useremail = $_SESSION["aiot_email"];
 
-        // Mencegah tampilan cache setelah logout
+        // Mencegah cache
         header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
         header("Pragma: no-cache");
         header("Expires: 0");
 
+        // 2. Ambil data PBL unik (DISTINCT) agar tidak double di dropdown
+        $sqlPBL = "SELECT DISTINCT PBL FROM user WHERE PBL != ''";
+        $rows = $db->read($sqlPBL);
 
-        $db = new Database();
-        // Ambil semua data PBL
-        $sql = "SELECT PBL FROM user";
-        $rows = $db->read($sql);
-
-        if ($rows) {
-            $options = "";
-            foreach ($rows as $row) {
-                $options .= '<option value="' . htmlspecialchars($row['PBL']) . '">' . htmlspecialchars($row['PBL']) . '</option>';
+        // 3. Ambil Status Loker
+        $lockerStatus = [];
+        $sqlLocker = "SELECT locker_number, PBL FROM locker_status";
+        $resLocker = $conn->query($sqlLocker);
+        if ($resLocker && $resLocker->num_rows > 0) {
+            while ($row = $resLocker->fetch_assoc()) {
+                $lockerStatus[$row['locker_number']] = $row['PBL'];
             }
         }
     } else {
-        // Session tidak valid
         header("Location: login.php");
         exit();
     }
 } else {
-    // Belum login
     header("Location: login.php");
     exit();
 }
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -446,24 +433,38 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
                             </div>
                             <div class="card-body">
                                 <div class="locker-grid">
-                                    <div class="locker-box">
-                                        <div class="locker-number">1</div>
-                                        <select class="locker-select" data-locker="1" onchange="updateColor(this)">
-                                            <?php
-                                            $lockerNum = 1;
-                                            $currentVal = isset($lockerStatus[$lockerNum]) ? $lockerStatus[$lockerNum] : "";
+                                    <?php
+                                    // Gunakan perulangan dari 1 sampai 4
+                                    for ($i = 1; $i <= 4; $i++) {
+                                        $lockerNum = $i; // Variabel ini akan berubah di setiap putaran (1, lalu 2, lalu 3, dst)
+                                        $currentVal = isset($lockerStatus[$lockerNum]) ? $lockerStatus[$lockerNum] : "";
+                                        
+                                        // Tentukan warna background berdasarkan status
+                                        $bgColor = ($currentVal == "Available") ? "#d4edda" : ($currentVal != "" ? "#f8d7da" : "#f0f0f0");
+                                    ?>
+                                        <div class="locker-box" style="background-color: <?php echo $bgColor; ?>;">
+                                            <div class="locker-number"><?php echo $i; ?></div>
+                                            
+                                            <select class="locker-select" data-locker="<?php echo $i; ?>" onchange="updateColor(this)">
+                                                <?php
+                                                echo '<option value="">Pilih</option>';
+                                                echo '<option value="Available"' . ($currentVal == "Available" ? " selected" : "") . '>Available</option>';
 
-                                            echo '<option value="">Pilih</option>';
-                                            echo '<option value="Available"' . ($currentVal == "Available" ? " selected" : "") . '>Available</option>';
-
-                                            foreach ($rows as $row) {
-                                                $val = htmlspecialchars($row['PBL']);
-                                                $selected = ($val == $currentVal) ? " selected" : "";
-                                                echo '<option value="' . $val . '"' . $selected . '>' . $val . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
+                                                // Menampilkan opsi PBL dari database
+                                                if ($rows) {
+                                                    foreach ($rows as $row) {
+                                                        $val = htmlspecialchars($row['PBL']);
+                                                        $selected = ($val == $currentVal) ? " selected" : "";
+                                                        echo '<option value="' . $val . '"' . $selected . '>' . $val . '</option>';
+                                                    }
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                    <?php 
+                                    } // Akhir dari pengulangan for
+                                    ?>
+                                </div>
 
                                     <div class="locker-box">
                                         <div class="locker-number">2</div>
