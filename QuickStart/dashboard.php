@@ -10,6 +10,30 @@ $useremail = $_SESSION["aiot_email"];
 include("classes/connect.php");
 include("classes/login.php");
 
+// --- BAGIAN BARU: CEK NOMOR LOCKER USER ---
+// Default jika tidak ditemukan
+$user_locker_number = "Belum Ada";
+
+// Gunakan koneksi database baru khusus untuk pengecekan ini
+// Sesuaikan "localhost", "root", "", "aiot" dengan setting database Anda jika berbeda
+$conn_locker = mysqli_connect("localhost", "root", "", "aiot");
+
+if ($conn_locker) {
+    // Amankan string PBL untuk mencegah error SQL
+    $pbl_safe = mysqli_real_escape_string($conn_locker, $userPBL);
+    
+    // Query cari nomor locker berdasarkan nama PBL user
+    $query_locker = "SELECT locker_number FROM loker_terpilih WHERE pbl = '$pbl_safe' LIMIT 1";
+    $result_locker = mysqli_query($conn_locker, $query_locker);
+
+    if ($result_locker && mysqli_num_rows($result_locker) > 0) {
+        $row_locker = mysqli_fetch_assoc($result_locker);
+        $user_locker_number = $row_locker['locker_number'];
+    }
+    // Tutup koneksi ini agar tidak mengganggu script lain
+    mysqli_close($conn_locker);
+}
+// ------------------------------------------
 
 if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
     $id = $_SESSION["aiot_userid"];
@@ -19,10 +43,8 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
 
     $result = $login->check_login($id);
 
-
     if ($result) {
     } else {
-
         header("Location: Login.php");
         die;
     }
@@ -30,10 +52,7 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
     header("Location: Login.php");
     die;
 }
-
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -138,7 +157,6 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
                     </button>
-
 
 
                     <!-- Topbar Navbar -->
@@ -347,6 +365,9 @@ if (isset($_SESSION["aiot_userid"]) && is_numeric($_SESSION["aiot_userid"])) {
                                         <li class="list-group-item"><strong>NAMA:</strong> <?php echo htmlspecialchars($username); ?></li>
                                         <li class="list-group-item"><strong>NIM:</strong> <?php echo htmlspecialchars($userNIM); ?></li>
                                         <li class="list-group-item"><strong>PBL:</strong> <?php echo htmlspecialchars($userPBL); ?></li>
+                                        <!-- BAGIAN BARU: TAMPILKAN NOMOR LOCKER DI SINI -->
+                                        <li class="list-group-item"><strong>Locker Number:</strong> <?php echo htmlspecialchars($user_locker_number); ?></li>
+                                        <!-- SELESAI -->
                                         <li class="list-group-item"><strong>User ID:</strong> <?php echo htmlspecialchars($userid); ?></li>
                                     </ul>
 
